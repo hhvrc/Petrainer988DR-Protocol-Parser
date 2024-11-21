@@ -8,14 +8,11 @@ using ScottPlot.Interactivity.UserActions;
 var allPackets = AnalyzeAllWavFiles(@"D:\User\Downloads\Thingy\data\");
 Console.WriteLine(JsonSerializer.Serialize(allPackets, new JsonSerializerOptions { WriteIndented = true }));
 
-var groupedTimings = GroupByProximity(Singletons.Timings);
-Console.WriteLine(JsonSerializer.Serialize(groupedTimings.ToDictionary(x => x.Average(), x => x.Count), new JsonSerializerOptions { WriteIndented = true }));
-
 var timingsCounts = Singletons.Timings
     .GroupBy(x => x)
     .Where(g => g.Key is > 150.0 and < 1700.0)
     .OrderBy(x => x.Key)
-    .ToDictionary(g => g.Key, g => g.Count());;
+    .ToDictionary(g => g.Key, g => g.Count());
 CreateScatterPlot(timingsCounts, @"D:\User\Downloads\Thingy\data\test.png", 1000, 500);
 
 static void CreateScatterPlot(Dictionary<double, int> valueGroup, string saveImagePath, int width, int height)
